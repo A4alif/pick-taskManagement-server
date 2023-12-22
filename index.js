@@ -29,12 +29,17 @@ async function run() {
     // database and collection name
     const database = client.db("pickDB");
     const taskCollection = database.collection("taskCollection");
+    const myTaskCartCollection = database.collection("myTaskCartCollection");
 
     // task all api
 
     // get api
     app.get("/api/v1/tasks", async(req, res) => {
-      const cursor = taskCollection.find();
+      let query = {};
+      if (req.query?.email) {
+        query = { authorEmail: req.query?.email };
+      }
+      const cursor = taskCollection.find(query);
       const result = await cursor.toArray();
       res.send({result});
     })
@@ -49,7 +54,6 @@ async function run() {
     // post api
     app.post("/api/v1/add-task", async(req, res) => {
       const task = req.body;
-     
       const result = await taskCollection.insertOne(task);
       res.send({result});
     })
@@ -82,6 +86,22 @@ async function run() {
       res.send({result})
     })
 
+      // My task cart Collection
+
+      // get api
+      app.get("/api/v1/mytask-cart", async(req, res) => {
+        const cursor = myTaskCartCollection.find();
+        const result = await cursor.toArray();
+        res.send({result});
+      })
+
+      // post api
+      app.post("/api/v1/mytask-cart", async(req, res) => {
+        const myTaskCart = req.body;
+        console.log(myTaskCart);
+        const result = await myTaskCartCollection.insertOne(myTaskCart);
+        res.send({result});
+      })
 
 
     // Send a ping to confirm a successful connection
