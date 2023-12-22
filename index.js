@@ -54,6 +54,26 @@ async function run() {
       res.send({result});
     })
 
+    // put api
+    app.put("/api/v1/update-task/:id", async(req, res) => {
+
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const options = {upsert: true};
+      const task = req.body;
+      
+      const updateDoc = {
+        $set: {
+          title: task.title,
+          description: task.description,
+          dueDate: task.dueDate,
+          priority: task.postTags
+        }
+      }
+      const result = await taskCollection.updateOne(filter, updateDoc, options);
+      res.send({result});
+    })
+
     // delete api
     app.delete("/api/v1/delete-task/:id", async(req, res) => {
       const id = req.params.id;
