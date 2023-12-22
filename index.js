@@ -38,6 +38,13 @@ async function run() {
       const result = await cursor.toArray();
       res.send({result});
     })
+    // single task
+    app.get("/api/v1/single-task/:id", async(req,res) =>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await taskCollection.findOne(query);
+      res.send({result})
+    })
 
     // post api
     app.post("/api/v1/add-task", async(req, res) => {
@@ -49,7 +56,6 @@ async function run() {
 
     // delete api
     app.delete("/api/v1/delete-task/:id", async(req, res) => {
-      console.log('apihit');
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
       const result = await taskCollection.deleteOne(query);
