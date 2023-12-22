@@ -32,6 +32,13 @@ async function run() {
 
     // task all api
 
+    // get api
+    app.get("/api/v1/tasks", async(req, res) => {
+      const cursor = taskCollection.find();
+      const result = await cursor.toArray();
+      res.send({result});
+    })
+
     // post api
     app.post("/api/v1/add-task", async(req, res) => {
       const task = req.body;
